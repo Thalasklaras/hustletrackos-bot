@@ -1,26 +1,12 @@
 """Telegram productivity bot."""
 
-# Ensure imghdr is available even on Python 3.13+
-try:
-    import imghdr
-except ModuleNotFoundError:
-    import importlib.util
-    import pathlib
-    import sys
-
-    spec = importlib.util.spec_from_file_location(
-        "imghdr", pathlib.Path(__file__).with_name("imghdr.py")
-    )
-    imghdr = importlib.util.module_from_spec(spec)
-    assert spec.loader
-    spec.loader.exec_module(imghdr)
-    sys.modules["imghdr"] = imghdr
-
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import datetime
+import sys
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
+
 user_data = {}
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -131,18 +117,20 @@ async def send_daily_reminders(context: ContextTypes.DEFAULT_TYPE):
             except:
                 continue
 
-if __name__ == '__main__':
-    print("🤖 Hustletrackos is running...")
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("lockin", lockin))
-    app.add_handler(CommandHandler("break", break_command))
-    app.add_handler(CommandHandler("lockout", lockout))
-
+async def setup_jobs(app):
     app.job_queue.run_daily(
         send_daily_reminders,
         time=datetime.time(hour=12, minute=0),
         name="daily_reminder"
     )
+
+if __name__ == '__main__':
+    print("🤖 Hustletrackos is running...")
+    app = ApplicationBuilder().token(TOKEN).post_init(setup_jobs).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("lockin", lockin))
+    app.add_handler(CommandHandler("break", break_command))
+    app.add_handler(CommandHandler("lockout", lockout))
 
     app.run_polling()
