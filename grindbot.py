@@ -5,6 +5,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 import datetime
 import asyncio
 import telegram
+import nest_asyncio
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
 user_data = {}
@@ -119,5 +120,5 @@ async def main():
     await app.run_polling()
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    nest_asyncio.apply()
+    asyncio.run(main())
