@@ -3,10 +3,8 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import datetime
-import sys
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
-
 user_data = {}
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -105,29 +103,9 @@ async def lockout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     del user_data[user_id]
 
-async def send_daily_reminders(context: ContextTypes.DEFAULT_TYPE):
-    now = datetime.datetime.now().date()
-    for user_id, data in user_data.items():
-        if data.get("last_active_date") != now:
-            try:
-                await context.bot.send_message(
-                    chat_id=user_id,
-                    text="⏰ Time to grind. Don't let today go to waste."
-                )
-            except:
-                continue
-
-async def setup_jobs(app):
-    app.job_queue.run_daily(
-        send_daily_reminders,
-        time=datetime.time(hour=12, minute=0),
-        name="daily_reminder"
-    )
-
 if __name__ == '__main__':
     print("🤖 Hustletrackos is running...")
-    app = ApplicationBuilder().token(TOKEN).post_init(setup_jobs).build()
-
+    app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("lockin", lockin))
     app.add_handler(CommandHandler("break", break_command))
