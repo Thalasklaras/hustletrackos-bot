@@ -1,4 +1,32 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+*.pyo
+
+# Virtual environment folders
 .venv/
+venv/
+ENV/
+env/
+
+# Environment variable files
+.env
+.env.*
+
+# Editor config
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Other temporary files
+*.sqlite3
+*.db
+
+# Pytest cache
+.pytest_cache/
