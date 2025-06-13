@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 import datetime
 import asyncio
+import telegram 
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
 user_data = {}
@@ -105,7 +106,9 @@ async def lockout(update: Update, context: ContextTypes.DEFAULT_TYPE):
     del user_data[user_id]
 
 async def main():
+    print(f"✅ Using python-telegram-bot version: {telegram.__version__}")
     print("🤖 Hustletrackos is running...")
+
     app = Application.builder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
@@ -117,4 +120,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
