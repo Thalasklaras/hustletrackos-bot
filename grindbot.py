@@ -1,8 +1,9 @@
 """Telegram productivity bot."""
 
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import Application, CommandHandler, ContextTypes
 import datetime
+import asyncio
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
 user_data = {}
@@ -103,12 +104,17 @@ async def lockout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     del user_data[user_id]
 
-if __name__ == '__main__':
+async def main():
     print("🤖 Hustletrackos is running...")
-    app = ApplicationBuilder().token(TOKEN).build()
+    app = Application.builder().token(TOKEN).build()
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("lockin", lockin))
     app.add_handler(CommandHandler("break", break_command))
     app.add_handler(CommandHandler("lockout", lockout))
 
-    app.run_polling()
+    await app.run_polling()
+
+if __name__ == '__main__':
+    asyncio.run(main())
+
