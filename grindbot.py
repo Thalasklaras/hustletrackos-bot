@@ -1,3 +1,21 @@
+"""Telegram productivity bot."""
+
+# Ensure imghdr is available even on Python 3.13+
+try:
+    import imghdr
+except ModuleNotFoundError:
+    import importlib.util
+    import pathlib
+    import sys
+
+    spec = importlib.util.spec_from_file_location(
+        "imghdr", pathlib.Path(__file__).with_name("imghdr.py")
+    )
+    imghdr = importlib.util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(imghdr)
+    sys.modules["imghdr"] = imghdr
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from apscheduler.schedulers.background import BackgroundScheduler
