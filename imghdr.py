@@ -1,12 +1,13 @@
 """Recognize image file formats based on their first few bytes."""
 
 from os import PathLike
-import warnings
 
 __all__ = ["what"]
 
-
-warnings._deprecated(__name__, remove=(3, 13))
+# The original stdlib implementation warns that this module was
+# deprecated and slated for removal in Python 3.13. That warning would
+# raise a RuntimeError when running under 3.13, so the call has been
+# removed here to keep this lightweight fallback usable.
 
 
 #-------------------------#
