@@ -18,11 +18,9 @@ except ModuleNotFoundError:
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
 
 TOKEN = "7624456489:AAF-KLXmQq7J1oR05P5CWwchSR4H66aL5Z0"
-
 user_data = {}
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -121,12 +119,12 @@ async def lockout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     del user_data[user_id]
 
-async def send_daily_reminders(app):
+async def send_daily_reminders(context: ContextTypes.DEFAULT_TYPE):
     now = datetime.datetime.now().date()
     for user_id, data in user_data.items():
         if data.get("last_active_date") != now:
             try:
-                await app.bot.send_message(
+                await context.bot.send_message(
                     chat_id=user_id,
                     text="⏰ Time to grind. Don't let today go to waste."
                 )
@@ -141,8 +139,10 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("break", break_command))
     app.add_handler(CommandHandler("lockout", lockout))
 
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(lambda: app.create_task(send_daily_reminders(app)), 'cron', hour=12, minute=0)
-    scheduler.start()
+    app.job_queue.run_daily(
+        send_daily_reminders,
+        time=datetime.time(hour=12, minute=0),
+        name="daily_reminder"
+    )
 
     app.run_polling()
